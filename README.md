@@ -1,7 +1,7 @@
 # Hospital
 Essa é uma modelagem de banco de dados para um Hospital fictício
 
-# Estudo de caso
+## Estudo de caso
 
 O hospital necessita de um sistema para sua área clínica que ajude a controlar consultas realizadas. Os médicos podem ser generalistas, especialistas ou residentes e têm seus dados pessoais cadastrados em planilhas digitais. Cada médico pode ter uma ou mais especialidades, que podem ser pediatria, clínica geral, gastroenterologia e dermatologia. Alguns registros antigos ainda estão em formulário de papel, mas será necessário incluir esses dados no novo sistema.
 
@@ -11,7 +11,7 @@ As consultas também têm sido registradas em planilhas, com data e hora de real
 
 Deseja-se ainda informatizar a receita do médico, de maneira que, no encerramento da consulta, ele possa registrar os medicamentos receitados, a quantidade e as instruções de uso. A partir disso, espera-se que o sistema imprima um relatório da receita ao paciente ou permita sua visualização via internet.
 
-Requisitos do Hospital
+## Requisitos do Hospital
 
 O sistema deve permitir o cadastro dos profissionais do Hospital, contendo os dados pessoais como nome, CPF, data de nascimento, endereço, telefone e e-mail; seu cargo e suas especialidades.
 
@@ -28,5 +28,6 @@ O médico deve ser capaz de encerrar a consulta registrando os medicamentos rece
 
 O sistema deve permitir a impressão de relatórios com os dados das consultas dos pacientes.
 
+## Diagrama ER
 ![alt text](image.png)
 
