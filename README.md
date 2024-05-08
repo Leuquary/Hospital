@@ -66,5 +66,5 @@ RF006 O médico deve ser capaz de encerrar a consulta registrando os medicamento
 
 RF007 O sistema deve permitir a impressão de relatórios com os dados das consultas dos pacientes.
 
-## Modelo Lógico
+## Diagrama ER
 
