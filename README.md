@@ -14,7 +14,6 @@ Deseja-se ainda informatizar a receita do médico, de maneira que, no encerramen
 ## Requisitos do Hospital
 
 - O sistema deve permitir o cadastro dos profissionais do Hospital, contendo os dados pessoais como nome, CPF, data de nascimento, endereço, telefone e e-mail; seu cargo e suas especialidades.
-
 - O atendente deve ser capaz de agendar uma consulta para o paciente com os dados: data e hora da realização, 
 profissional responsável, paciente, valor da consulta ou convênio e especialidade buscada pelo paciente.
 - O atendente deve ser capaz de cadastrar o paciente, com os dados pessoais como nome, data de nascimento, endereço, telefone, e-mail; documentos (CPF e RG) e os dados do convênio, como número da carteira.
