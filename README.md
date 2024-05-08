@@ -19,11 +19,8 @@ Deseja-se ainda informatizar a receita do médico, de maneira que, no encerramen
 profissional responsável, paciente, valor da consulta ou convênio e especialidade buscada pelo paciente.
 - O atendente deve ser capaz de cadastrar o paciente, com os dados pessoais como nome, data de nascimento, endereço, telefone, e-mail; documentos (CPF e RG) e os dados do convênio, como número da carteira.
 - O sistema deve registrar o convênio de cada paciente com os dados: nome, número de carteira, CNPJ e tempo de carência.
-
 - O paciente deve ser capaz de consultar os dados da sua consulta usando seu CPF, por meio do portal online da clínica.
-
 - O médico deve ser capaz de encerrar a consulta registrando os medicamentos receitados, a quantidade e as instruções de uso.
-
 - O sistema deve permitir a impressão de relatórios com os dados das consultas dos pacientes.
 
 ## Diagrama ER
