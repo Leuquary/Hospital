@@ -13,20 +13,20 @@ Deseja-se ainda informatizar a receita do médico, de maneira que, no encerramen
 
 ## Requisitos do Hospital
 
-RF001 O sistema deve permitir o cadastro dos profissionais do Hospital, contendo os dados pessoais como nome, CPF, data de nascimento, endereço, telefone e e-mail; seu cargo e suas especialidades.
+**RF001** O sistema deve permitir o cadastro dos profissionais do Hospital, contendo os dados pessoais como nome, CPF, data de nascimento, endereço, telefone e e-mail; seu cargo e suas especialidades.
 
-RF002 O atendente deve ser capaz de agendar uma consulta para o paciente com os dados: data e hora da realização, 
+**RF002** O atendente deve ser capaz de agendar uma consulta para o paciente com os dados: data e hora da realização, 
 profissional responsável, paciente, valor da consulta ou convênio e especialidade buscada pelo paciente.
 
-RF003 O atendente deve ser capaz de cadastrar o paciente, com os dados pessoais como nome, data de nascimento, endereço, telefone, e-mail; documentos (CPF e RG) e os dados do convênio, como número da carteira.
+**RF003** O atendente deve ser capaz de cadastrar o paciente, com os dados pessoais como nome, data de nascimento, endereço, telefone, e-mail; documentos (CPF e RG) e os dados do convênio, como número da carteira.
 
-RF004 O sistema deve registrar o convênio de cada paciente com os dados: nome, número de carteira, CNPJ e tempo de carência.
+**RF004** O sistema deve registrar o convênio de cada paciente com os dados: nome, número de carteira, CNPJ e tempo de carência.
 
-RF005 O paciente deve ser capaz de consultar os dados da sua consulta usando seu CPF, por meio do portal online da clínica.
+**RF005** O paciente deve ser capaz de consultar os dados da sua consulta usando seu CPF, por meio do portal online da clínica.
 
-RF006 O médico deve ser capaz de encerrar a consulta registrando os medicamentos receitados, a quantidade e as instruções de uso.
+**RF006** O médico deve ser capaz de encerrar a consulta registrando os medicamentos receitados, a quantidade e as instruções de uso.
 
-RF007 O sistema deve permitir a impressão de relatórios com os dados das consultas dos pacientes.
+**RF007** O sistema deve permitir a impressão de relatórios com os dados das consultas dos pacientes.
 
 ## Diagrama ER
 ![alt text](image.png)
@@ -51,20 +51,26 @@ A internação, obviamente, é vinculada a um paciente – que pode se internar 
 
 ## Requisitos do Hospital
 
-RF001 O sistema deve permitir o cadastro dos profissionais do Hospital, contendo os dados pessoais como nome, CPF, data de nascimento, endereço, telefone e e-mail; seu cargo e suas especialidades.
+**RF001** O sistema deve permitir o cadastro dos profissionais do Hospital, contendo os dados pessoais como nome, CPF, data de nascimento, endereço, telefone e e-mail; seu cargo e suas especialidades.
 
-RF002 O atendente deve ser capaz de agendar uma consulta para o paciente com os dados: data e hora da realização, 
+**RF002** O atendente deve ser capaz de agendar uma consulta para o paciente com os dados: data e hora da realização, 
 profissional responsável, paciente, valor da consulta ou convênio e especialidade buscada pelo paciente.
 
-RF003 O atendente deve ser capaz de cadastrar o paciente, com os dados pessoais como nome, data de nascimento, endereço, telefone, e-mail; documentos (CPF e RG) e os dados do convênio, como número da carteira.
+**RF003** O atendente deve ser capaz de cadastrar o paciente, com os dados pessoais como nome, data de nascimento, endereço, telefone, e-mail; documentos (CPF e RG) e os dados do convênio, como número da carteira.
 
-RF004 O sistema deve registrar o convênio de cada paciente com os dados: nome, número de carteira, CNPJ e tempo de carência.
+**RF004** O sistema deve registrar o convênio de cada paciente com os dados: nome, número de carteira, CNPJ e tempo de carência.
 
-RF005 O paciente deve ser capaz de consultar os dados da sua consulta usando seu CPF, por meio do portal online da clínica.
+**RF005** O paciente deve ser capaz de consultar os dados da sua consulta usando seu CPF, por meio do portal online da clínica.
 
-RF006 O médico deve ser capaz de encerrar a consulta registrando os medicamentos receitados, a quantidade e as instruções de uso.
+**RF006** O médico deve ser capaz de encerrar a consulta registrando os medicamentos receitados, a quantidade e as instruções de uso.
 
-RF007 O sistema deve permitir a impressão de relatórios com os dados das consultas dos pacientes.
+**RF007** O sistema deve permitir a impressão de relatórios com os dados das consultas dos pacientes.
+
+**RF008** O sistema deve permitir o registro das internações do paciente, com os dados: data de entrada no hospital, data prevista de alta, data da alta, descrição dos procedimentos, dados do quarto, enfermeiro, médico e paciente.
+
+**RF009** O sistema deve permitir o cadastro dos quartos existentes no hospital, com a numeração, a descrição do quarto, valor diário e tipo do quarto.
+
+**RF010** O sistema deve permitir o registro dos profissionais de enfermaria contendo os dados: nome, CPF e registro no conselho de enfermagem (CRE).
 
 ## Diagrama ER
 
