@@ -73,4 +73,6 @@ profissional responsável, paciente, valor da consulta ou convênio e especialid
 **RF010** O sistema deve permitir o registro dos profissionais de enfermaria contendo os dados: nome, CPF e registro no conselho de enfermagem (CRE).
 
 ## Diagrama ER
+![hospital2](https://github.com/Leuquary/hospital/assets/111248276/3d4bf359-9b5e-4421-be47-4a1b0f8709b3)
+
 
