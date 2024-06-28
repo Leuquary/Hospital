@@ -84,7 +84,7 @@ use hospital;
 create table medico (
 	codigo_medico int primary key,
 	nome_medico varchar(50) not null,
-	cpf_medico varchar(14) unique not null,
+	cpf_medico varchar(15) unique not null,
 	rg_medico varchar(9) unique not null,
 	cargo_medico varchar(20) not null, 
 	data_nasc_medico date not null,
@@ -168,7 +168,7 @@ create table enfermeiro(
 	codigo_enfermeiro int primary key,
     nome_enfermeito varchar(50) not null,
     rg_enfermeiro varchar(9) unique not null,
-    cpf_enfermeiro varchar(14) unique not null,
+    cpf_enfermeiro varchar(15) unique not null,
 	cre_enfermeiro varchar(20) unique not null,
     data_nasc_enfermeiro date not null
 );
@@ -223,3 +223,79 @@ alter table enfermeiro_internacao add foreign key fk_codigo_internacao (codigo_i
 
 /*relacionando quarto e tipo*/
 alter table quarto add foreign key fk_tipo_quarto (codigo_tipo_quarto) references tipo_quarto(codigo_tipo_quarto);
+```
+
+# O Prisioneiro dos Dados
+Com o banco de dados para o sistema hospitalar completamente montado, é necessário incluir dados para realizar os devidos testes e validar sua viabilidade quanto ao sistema. Nesta etapa, também é importante realizar a separação de alguns scripts iniciais para o banco, com os dados que serão necessários a um povoamento inicial do sistema.
+
+## Inclua ao menos dez médicos de diferentes especialidades. Ao menos sete especialidades (considere a afirmação de que “entre as especialidades há pediatria, clínica geral, gastrenterologia e dermatologia”).
+
+```sql
+insert into especialidade (codigo_especialidade, descricao_especialidade) values
+(1, 'Cardiologia'),
+(2, 'Pediatria'),
+(3, 'Clínica geral'),
+(4, 'Ortopedia'),
+(5, 'Dermatologia'),
+(6, 'Psiquiatria'),
+(7, 'Ginecologia'),
+(8, 'Oftalmologia'),
+(9, 'Gastroenterologia'),
+(10, 'Oncologia');
+
+insert medico (codigo_medico, nome_medico, cpf_medico, rg_medico, cargo_medico, data_nasc_medico, codigo_especialidade) values
+(1, 'Dr. João Silva', '123.456.789-00', 'MG1234567', 'Cardiologista', '1975-04-15', 1),
+(2, 'Dra. Maria Souza', '234.567.890-11', 'SP2345678', 'Pediatra', '1980-06-20', 2),
+(3, 'Dr. Carlos Pereira', '345.678.901-22', 'RJ3456789', 'Neurologista', '1978-09-10', 3),
+(4, 'Dra. Ana Lima', '456.789.012-33', 'PR4567890', 'Ortopedista', '1985-11-25', 4),
+(5, 'Dr. Paulo Gomes', '567.890.123-44', 'RS5678901', 'Dermatologista', '1970-12-30', 5),
+(6, 'Dra. Fernanda Alves', '678.901.234-55', 'SC6789012', 'Psiquiatra', '1982-03-18', 6),
+(7, 'Dr. Luiz Martins', '789.012.345-66', 'BA7890123', 'Ginecologista', '1973-07-22', 7),
+(8, 'Dra. Helena Castro', '890.123.456-77', 'DF8901234', 'Oftalmologista', '1988-05-14', 8),
+(9, 'Dr. Ricardo Santos', '901.234.567-88', 'CE9012345', 'Gastroenterologista', '1976-10-05', 9),
+(10, 'Dra. Carolina Fernandes', '012.345.678-99', 'GO0123456', 'Oncologista', '1981-08-19', 10);
+```
+
+##Inclua ao menos 15 pacientes.
+```sql
+insert into convenio (numero_carteira, nome_convenio, tempo_carencia, cnpj_convenio) values
+(1, 'Unimed', '30 dias', '11122233000101'),
+(2, 'Amil', '60 dias', '22233344000202'),
+(3, 'Bradesco Saúde', '45 dias', '33344455000303'),
+(4, 'SulAmérica', '30 dias', '44455566000404'),
+(5, 'Golden Cross', '60 dias', '55566677000505');
+
+insert into paciente (codigo_paciente, nome_paciente, cpf_paciente, rg_paciente, telefone_paciente, email_paciente, data_nasc_paciente, codigo_convenio) values
+(1, 'Alice Souza', '12345678901', 'MG1234567', '31987654321', 'alice@example.com', '1990-01-01', 1),
+(2, 'Bruno Lima', '23456789012', 'SP2345678', '11987654322', 'bruno@example.com', '1985-02-02', 2),
+(3, 'Carlos Pereira', '34567890123', 'RJ3456789', '21987654323', 'carlos@example.com', '1995-03-03', 3),
+(4, 'Daniela Santos', '45678901234', 'PR4567890', '41987654324', 'daniela@example.com', '1980-04-04', 4),
+(5, 'Eduardo Silva', '56789012345', 'RS5678901', '51987654325', 'eduardo@example.com', '1975-05-05', 5),
+(6, 'Fernanda Oliveira', '67890123456', 'SC6789012', '61987654326', 'fernanda@example.com', '1988-06-06', 1),
+(7, 'Gabriel Costa', '78901234567', 'BA7890123', '71987654327', 'gabriel@example.com', '1979-07-07', 2),
+(8, 'Helena Martins', '89012345678', 'DF8901234', '81987654328', 'helena@example.com', '1992-08-08', 3),
+(9, 'Igor Almeida', '90123456789', 'CE9012345', '91987654329', 'igor@example.com', '1983-09-09', 4),
+(10, 'Julia Fernandes', '01234567890', 'GO0123456', '61987654330', 'julia@example.com', '1991-10-10', 5),
+(11, 'Lucas Rocha', '12345098765', 'MA1234509', '71987654331', 'lucas@example.com', '1987-11-11', 1),
+(12, 'Mariana Ribeiro', '23456109876', 'PA2345610', '81987654332', 'mariana@example.com', '1982-12-12', 2),
+(13, 'Nicolas Lima', '34567210987', 'PE3456721', '91987654333', 'nicolas@example.com', '1993-01-13', 3),
+(14, 'Olivia Silva', '45678321098', 'PI4567832', '61987654334', 'olivia@example.com', '1994-02-14', 4),
+(15, 'Pedro Nunes', '56789432109', 'RJ5678943', '31987654335', 'pedro@example.com', '1990-03-15', 5);
+
+insert into endereco (codigo_endereco, rua, bairro, cep, numero, complemento, codigo_paciente) values
+(1, 'Rua A', 'Bairro A', '30123456', 101, 'Apto 1', 1),
+(2, 'Rua B', 'Bairro B', '40123456', 102, 'Apto 2', 2),
+(3, 'Rua C', 'Bairro C', '50123456', 103, 'Apto 3', 3),
+(4, 'Rua D', 'Bairro D', '60123456', 104, 'Apto 4', 4),
+(5, 'Rua E', 'Bairro E', '70123456', 105, 'Apto 5', 5),
+(6, 'Rua F', 'Bairro F', '80123456', 106, 'Apto 6', 6),
+(7, 'Rua G', 'Bairro G', '90123456', 107, 'Apto 7', 7),
+(8, 'Rua H', 'Bairro H', '01123456', 108, 'Apto 8', 8),
+(9, 'Rua I', 'Bairro I', '11123456', 109, 'Apto 9', 9),
+(10, 'Rua J', 'Bairro J', '12123456', 110, 'Apto 10', 10),
+(11, 'Rua K', 'Bairro K', '13123456', 111, 'Apto 11', 11),
+(12, 'Rua L', 'Bairro L', '14123456', 112, 'Apto 12', 12),
+(13, 'Rua M', 'Bairro M', '15123456', 113, 'Apto 13', 13),
+(14, 'Rua N', 'Bairro N', '16123456', 114, 'Apto 14', 14),
+(15, 'Rua O', 'Bairro O', '17123456', 115, 'Apto 15', 15);
+```
