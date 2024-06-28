@@ -228,7 +228,7 @@ alter table quarto add foreign key fk_tipo_quarto (codigo_tipo_quarto) reference
 # O Prisioneiro dos Dados
 Com o banco de dados para o sistema hospitalar completamente montado, é necessário incluir dados para realizar os devidos testes e validar sua viabilidade quanto ao sistema. Nesta etapa, também é importante realizar a separação de alguns scripts iniciais para o banco, com os dados que serão necessários a um povoamento inicial do sistema.
 
-## Inclua ao menos dez médicos de diferentes especialidades. Ao menos sete especialidades (considere a afirmação de que “entre as especialidades há pediatria, clínica geral, gastrenterologia e dermatologia”).
+- Inclua ao menos dez médicos de diferentes especialidades. Ao menos sete especialidades (considere a afirmação de que “entre as especialidades há pediatria, clínica geral, gastrenterologia e dermatologia”).
 
 ```sql
 insert into especialidade (codigo_especialidade, descricao_especialidade) values
@@ -256,7 +256,7 @@ insert medico (codigo_medico, nome_medico, cpf_medico, rg_medico, cargo_medico, 
 (10, 'Dra. Carolina Fernandes', '012.345.678-99', 'GO0123456', 'Oncologista', '1981-08-19', 10);
 ```
 
-##Inclua ao menos 15 pacientes.
+- Inclua ao menos 15 pacientes.
 ```sql
 insert into convenio (numero_carteira, nome_convenio, tempo_carencia, cnpj_convenio) values
 (1, 'Unimed', '30 dias', '11122233000101'),
