@@ -75,7 +75,7 @@ profissional responsável, paciente, valor da consulta ou convênio e especialid
 ## Diagrama ER
 ![ModeloHospital](https://github.com/Leuquary/hospital/assets/111248276/9a055889-724b-4a75-9798-adb8f42cadf0)
 
-Código SQL
+## Código SQL
 
 ```sql
 create database hospital;
