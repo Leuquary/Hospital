@@ -77,4 +77,149 @@ profissional responsável, paciente, valor da consulta ou convênio e especialid
 
 Código SQL
 
+```sql
+create database hospital;
+use hospital;
 
+create table medico (
+	codigo_medico int primary key,
+	nome_medico varchar(50) not null,
+	cpf_medico varchar(14) unique not null,
+	rg_medico varchar(9) unique not null,
+	cargo_medico varchar(20) not null, 
+	data_nasc_medico date not null,
+	codigo_especialidade int
+);
+
+create table paciente (
+	codigo_paciente int primary key,
+	nome_paciente varchar(50) not null,
+	cpf_paciente varchar(11) unique not null, 
+	rg_paciente varchar(9) unique not null, 
+	telefone_paciente varchar(11) not null,
+	email_paciente varchar(50) unique not null,
+	data_nasc_paciente date not null,
+	codigo_convenio int not null
+);
+
+create table convenio (
+	numero_carteira int primary key, 
+	nome_convenio varchar(50) not null,
+	tempo_carencia varchar(10) not null,
+	cnpj_convenio varchar(14) unique not null
+);
+
+create table consulta(
+	codigo_consulta int primary key,
+	data_consulta date not null,
+	horario_consulta time not null,
+	valor_consulta decimal(5,2) not null,
+	forma_pagamento varchar(20) not null,
+	codigo_paciente int not null,
+	codigo_medico int not null, 
+	codigo_especialidade int not null,
+    codigo_convenio int
+);
+
+create table especialidade(
+	codigo_especialidade int primary key,
+	descricao_especialidade varchar(50) not null
+);
+
+create table receita(
+	codigo_receita int primary key,
+    nome_medicamento varchar(100) not null,
+    instrucoes_medicamento varchar(255) not null,
+    codigo_consulta int not null
+);
+
+create table endereco(
+	codigo_endereco int primary key,
+    rua varchar(100) not null,
+    bairro varchar(100) not null,
+    cep varchar(9) not null,
+    numero int not null,
+    complemento varchar(100),
+    codigo_paciente int not null
+);
+
+create table internacao(
+	codigo_internacao int primary key,
+    data_prevista_alta date not null,
+    data_entrada date not null,
+    data_alta date,
+    codigo_medico int not null,
+    numero_quarto int not null
+);
+
+create table quarto(
+	numero_quarto int primary key,
+    codigo_tipo_quarto int not null
+);
+
+create table procedimento(
+	codigo_procedimento int primary key,
+    nome_procedimento varchar(50) not null,
+    descricao_procedimento varchar(100) not null,
+    codigo_internacao int not null
+);
+
+create table enfermeiro(
+	codigo_enfermeiro int primary key,
+    nome_enfermeito varchar(50) not null,
+    rg_enfermeiro varchar(9) unique not null,
+    cpf_enfermeiro varchar(14) unique not null,
+	cre_enfermeiro varchar(20) unique not null,
+    data_nasc_enfermeiro date not null
+);
+
+create table tipo_quarto(
+	codigo_tipo_quarto int primary key,
+    diaria_quarto decimal(5,2) not null,
+    descricao_quarto varchar(200) not null
+);
+
+create table enfermeiro_internacao(
+	codigo_enfermeiro int not null,
+    codigo_internacao int not null
+);
+
+/*relacionando convenio e paciente*/
+alter table paciente add foreign key fk_codigo_convenio (codigo_convenio) references convenio(numero_carteira);
+
+/*relacionando especialidade e médico*/
+alter table medico add foreign key fk_codigo_especialidade (codigo_especialidade) references especialidade(codigo_especialidade);
+
+/*relacionando consulta e especialidade*/
+alter table consulta add foreign key fk_codigo_especialidade (codigo_especialidade) references especialidade(codigo_especialidade);
+
+/*relacionando médico e consulta*/
+alter table consulta add foreign key fk_codigo_medico (codigo_medico) references medico(codigo_medico);
+
+/*relacionando paciente e consulta*/
+alter table consulta add foreign key fk_codigo_paciente (codigo_paciente) references paciente(codigo_paciente);
+
+/*relacionando consulta e receita*/
+alter table receita add foreign key fk_codigo_consulta (codigo_consulta) references consulta(codigo_consulta);
+
+/*relacionando consulta e convenio*/
+alter table consulta add foreign key fk_codigo_convenio (numero_carteira) references convenio(numero_carteira);
+
+/*relacionando paciente e endereço*/
+alter table endereco add foreign key fk_codigo_paciente (codigo_paciente) references paciente(codigo_paciente);
+
+/*relacionando quarto e internação*/
+alter table internacao add foreign key fk_numero_quarto (numero_quarto) references quarto(numero_quarto);
+
+/*relacionando internção e procedimento*/
+alter table procedimento add foreign key fk_codigo_internacao (codigo_internacao) references internacao(codigo_internacao);
+
+/*relacionando internação e médico*/	
+alter table internacao add foreign key fk_codigo_medico (codigo_medico) references medico(codigo_medico);
+
+/*relacionando enfermeiro e internação*/
+alter table enfermeiro_internacao add foreign key fk_codigo_enfermeiro (codigo_enfermeiro) references enfermeiro(codigo_enfermeiro);
+alter table enfermeiro_internacao add foreign key fk_codigo_internacao (codigo_internacao) references internacao(codigo_internacao);
+
+/*relacionando quarto e tipo*/
+alter table quarto add foreign key fk_tipo_quarto (codigo_tipo_quarto) references tipo_quarto(codigo_tipo_quarto);
