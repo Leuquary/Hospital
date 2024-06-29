@@ -87,6 +87,7 @@ create table medico (
 	cpf_medico varchar(15) unique not null,
 	rg_medico varchar(9) unique not null,
 	cargo_medico varchar(20) not null, 
+    crm_medico varchar(20) not null,
 	data_nasc_medico date not null
 );
 
@@ -167,13 +168,17 @@ create table quarto(
 create table procedimento(
 	codigo_procedimento int primary key,
     nome_procedimento varchar(50) not null,
-    descricao_procedimento varchar(100) not null,
-    codigo_internacao int not null
+    descricao_procedimento varchar(100) not null
+);
+
+create table procedimento_internacao(
+	codigo_internacao int not null,
+    codigo_procedimento int not null
 );
 
 create table enfermeiro(
 	codigo_enfermeiro int primary key,
-    nome_enfermeito varchar(50) not null,
+    nome_enfermeiro varchar(50) not null,
     rg_enfermeiro varchar(9) unique not null,
     cpf_enfermeiro varchar(15) unique not null,
 	cre_enfermeiro varchar(20) unique not null,
@@ -216,7 +221,8 @@ alter table endereco add foreign key fk_codigo_paciente (codigo_paciente) refere
 alter table internacao add foreign key fk_numero_quarto (numero_quarto) references quarto(numero_quarto);
 
 /*relacionando internação e procedimento*/
-alter table procedimento add foreign key fk_codigo_internacao (codigo_internacao) references internacao(codigo_internacao);
+alter table procedimento_internacao add foreign key fk_codigo_internacao (codigo_internacao) references internacao(codigo_internacao);
+alter table procedimento_internacao add foreign key fk_codigo_procedimento (codigo_procedimento) references procedimento(codigo_procedimento);
 
 /*relacionando internação e médico*/	
 alter table internacao add foreign key fk_codigo_medico (codigo_medico) references medico(codigo_medico);
@@ -257,17 +263,17 @@ insert into especialidade (codigo_especialidade, descricao_especialidade) values
 (9, 'Gastroenterologia'),
 (10, 'Oncologia');
 
-insert medico (codigo_medico, nome_medico, cpf_medico, rg_medico, cargo_medico, data_nasc_medico, codigo_especialidade) values
-(1, 'Dr. João Silva', '123.456.789-00', 'MG1234567', 'Cardiologista', '1975-04-15', 1),
-(2, 'Dra. Maria Souza', '234.567.890-11', 'SP2345678', 'Pediatra', '1980-06-20', 2),
-(3, 'Dr. Carlos Pereira', '345.678.901-22', 'RJ3456789', 'Neurologista', '1978-09-10', 3),
-(4, 'Dra. Ana Lima', '456.789.012-33', 'PR4567890', 'Ortopedista', '1985-11-25', 4),
-(5, 'Dr. Paulo Gomes', '567.890.123-44', 'RS5678901', 'Dermatologista', '1970-12-30', 5),
-(6, 'Dra. Fernanda Alves', '678.901.234-55', 'SC6789012', 'Psiquiatra', '1982-03-18', 6),
-(7, 'Dr. Luiz Martins', '789.012.345-66', 'BA7890123', 'Ginecologista', '1973-07-22', 7),
-(8, 'Dra. Helena Castro', '890.123.456-77', 'DF8901234', 'Oftalmologista', '1988-05-14', 8),
-(9, 'Dr. Ricardo Santos', '901.234.567-88', 'CE9012345', 'Gastroenterologista', '1976-10-05', 9),
-(10, 'Dra. Carolina Fernandes', '012.345.678-99', 'GO0123456', 'Oncologista', '1981-08-19', 10);
+insert medico (codigo_medico, nome_medico, cpf_medico, rg_medico, crm_medico, cargo_medico, data_nasc_medico, codigo_especialidade) values
+(1, 'Dr. João Silva', '123.456.789-00', 'MG1234567', 'CRM12345/MG', 'Cardiologista', '1975-04-15', 1),
+(2, 'Dra. Maria Souza', '234.567.890-11', 'SP2345678', 'CRM23456/SP', 'Pediatra', '1980-06-20', 2),
+(3, 'Dr. Carlos Pereira', '345.678.901-22', 'RJ3456789', 'CRM34567/RJ', 'Neurologista', '1978-09-10', 3),
+(4, 'Dra. Ana Lima', '456.789.012-33', 'PR4567890', 'CRM45678/PR', 'Ortopedista', '1985-11-25', 4),
+(5, 'Dr. Paulo Gomes', '567.890.123-44', 'RS5678901', 'CRM56789/RS', 'Dermatologista', '1970-12-30', 5),
+(6, 'Dra. Fernanda Alves', '678.901.234-55', 'SC6789012', 'CRM67890/SC', 'Psiquiatra', '1982-03-18', 6),
+(7, 'Dr. Luiz Martins', '789.012.345-66', 'BA7890123', 'CRM78901/BA', 'Ginecologista', '1973-07-22', 7),
+(8, 'Dra. Helena Castro', '890.123.456-77', 'DF8901234', 'CRM89012/DF', 'Oftalmologista', '1988-05-14', 8),
+(9, 'Dr. Ricardo Santos', '901.234.567-88', 'CE9012345', 'CRM90123/CE', 'Gastroenterologista', '1976-10-05', 9),
+(10, 'Dra. Carolina Fernandes', '012.345.678-99', 'GO0123456', 'CRM01234/GO', 'Oncologista', '1981-08-19', 10);
 ```
 
 - Inclua ao menos 15 pacientes.
@@ -359,7 +365,6 @@ insert into receita (codigo_receita, nome_medicamento, qtd_medicamento, instruco
 (18, 'Alprazolam', 3, 'Tomar 1 comprimido ao dormir', 18),
 (19, 'Pantoprazol', 1, 'Tomar 1 comprimido ao dia', 19),
 (20, 'Fluconazol', 1, 'Tomar 1 comprimido ao dia por 7 dias', 20);
-
 insert into receita (codigo_receita, nome_medicamento, qtd_medicamento, instrucoes_medicamento, codigo_consulta) values
 (21, 'Paracetamol', 1, 'Tomar 1 comprimido a cada 8 horas', 1),
 (22, 'Ibuprofeno', 1, 'Tomar 1 comprimido a cada 6 horas', 2),
@@ -381,7 +386,20 @@ insert into receita (codigo_receita, nome_medicamento, qtd_medicamento, instruco
 (38, 'Alprazolam', 7, 'Tomar 1 comprimido ao dormir', 18),
 (39, 'Pantoprazol', 7, 'Tomar 1 comprimido ao dia', 19),
 (40, 'Fluconazol', 1,  'Tomar 1 comprimido ao dia por 7 dias', 20);
+
+insert into consulta (codigo_consulta, data_consulta, horario_consulta, valor_consulta, forma_pagamento, codigo_paciente, codigo_medico, codigo_especialidade, numero_carteira_convenio) values
+(21, '2022-02-01', '09:00:00', 150.00, 'Dinheiro', 1, 1, 1, NULL),
+(22, '2022-02-10', '11:00:00', 200.00, 'Cartão', 2, 2, 2, NULL),
+(23, '2022-03-01', '13:00:00', 175.00, 'Cartão', 3, 3, 3, NULL),
+(24, '2022-03-15', '15:00:00', 180.00, 'Dinheiro', 4, 4, 4, NULL);
+
+insert into receita (codigo_receita, nome_medicamento, qtd_medicamento, instrucoes_medicamento, codigo_consulta) values
+(41, 'Dipirona', 1, 'Tomar 1 comprimido a cada 6 horas', 21),
+(42, 'Vitamina C', 2, 'Tomar 1 comprimido ao dia', 22),
+(43, 'Antialérgico', 1, 'Tomar 1 comprimido ao dia', 23),
+(44, 'Ibuprofeno', 3, 'Tomar 1 comprimido a cada 8 horas', 24);
 ```
+
 - Associe ao menos cinco pacientes a cinco consultas
 ```sql
 insert into consulta (codigo_consulta, data_consulta, horario_consulta, valor_consulta, forma_pagamento, codigo_paciente, codigo_medico, codigo_especialidade, codigo_convenio) values
@@ -391,45 +409,57 @@ insert into consulta (codigo_consulta, data_consulta, horario_consulta, valor_co
 (4, '2018-05-25', '11:00:00', 220.00, 'Cheque', 4, 4, 4, 4),
 (5, '2017-11-30', '16:00:00', 170.00, 'Dinheiro', 5, 5, 5, 5);
 ```
+
 - Registre ao menos sete internações. Pelo menos dois pacientes devem ter se internado mais de uma vez. Ao menos três quartos devem ser cadastrados. As internações devem ter ocorrido entre 01/01/2015 e 01/01/2022. Considerando que “a princípio o hospital trabalha com apartamentos, quartos duplos e enfermaria”, inclua ao menos esses três tipos com valores diferentes. Inclua dados de dez profissionais de enfermaria. Associe cada internação a ao menos dois enfermeiros.
 ```sql
+insert into tipo_quarto (codigo_tipo_quarto, diaria_quarto, descricao_quarto) values
+(1, 300.00, 'Apartamento'),
+(2, 150.00, 'Quarto Duplo'),
+(3, 100.00, 'Enfermaria');
+
 insert into quarto (numero_quarto, codigo_tipo_quarto) values
 (101, 1),
 (102, 2),
-(103, 3),
-(104, 1),
-(105, 2);
-
-insert into tipo_quarto (codigo_tipo_quarto, diaria_quarto, descricao_quarto) values
-(1, 150.00, 'Apartamento'),
-(2, 250.00, 'Enfermaria'),
-(3, 350.00, 'Quarto duplo');
-
-insert into enfermeiro (codigo_enfermeiro, nome_enfermeito, rg_enfermeiro, cpf_enfermeiro, cre_enfermeiro, data_nasc_enfermeiro) values
-(1, 'Enf. Joana Martins', 'SP9876543', '123.456.789-01', 'CRE123456', '1985-03-10'),
-(2, 'Enf. Carlos Eduardo', 'RJ8765432', '234.567.890-12', 'CRE234567', '1980-07-22'),
-(3, 'Enf. Ana Paula Silva', 'MG7654321', '345.678.901-23', 'CRE345678', '1990-02-15'),
-(4, 'Enf. Maria Clara Oliveira', 'BA6543210', '456.789.012-34', 'CRE456789', '1987-05-05'),
-(5, 'Enf. José Antônio Sousa', 'RS5432109', '567.890.123-45', 'CRE567890', '1983-09-25'),
-(6, 'Enf. Paula Mendes', 'SC4321098', '678.901.234-56', 'CRE678901', '1981-11-30'),
-(7, 'Enf. Thiago Ribeiro', 'PR3210987', '789.012.345-67', 'CRE789012', '1984-04-14'),
-(8, 'Enf. Laura Carvalho', 'PE2109876', '890.123.456-78', 'CRE890123', '1989-01-25'),
-(9, 'Enf. Marcos Silva', 'GO1098765', '901.234.567-89', 'CRE901234', '1978-08-12'),
-(10, 'Enf. Fernanda Gomes', 'DF0123456', '012.345.678-90', 'CRE012345', '1992-06-18');
+(103, 3);
 
 insert into internacao (codigo_internacao, data_prevista_alta, data_entrada, data_alta, codigo_medico, numero_quarto, codigo_paciente, numero_carteira_convenio) values
-(1, '2015-01-20', '2015-01-10', '2015-01-19', 1, 101, 1, 1),
-(2, '2016-02-25', '2016-02-15', '2016-02-24', 2, 102, 2, 2),
-(3, '2017-03-30', '2017-03-20', '2017-03-29', 3, 103, 3, 3),
-(4, '2018-04-20', '2018-04-10', '2018-04-19', 4, 101, 4, 4),
-(5, '2019-05-25', '2019-05-15', '2019-05-24', 5, 102, 5, 5),
-(6, '2020-06-30', '2020-06-20', '2020-06-29', 6, 103, 6, 1),
-(7, '2021-07-20', '2021-07-10', '2021-07-19', 7, 101, 7, 2),
-(8, '2021-08-25', '2021-08-15', '2021-08-24', 8, 102, 8, 3),
-(9, '2021-09-30', '2021-09-20', '2021-09-29', 9, 103, 9, 4),
-(10, '2022-01-15', '2022-01-05', '2022-01-14', 10, 101, 10, 5),
-(11, '2016-10-15', '2016-10-05', '2016-10-14', 1, 102, 1, 1),
-(12, '2018-12-20', '2018-12-10', '2018-12-19', 2, 103, 2, 2);
+(1, '2021-01-10', '2021-01-01', '2021-01-10', 1, 101, 1, 1),
+(2, '2021-02-15', '2021-02-01', '2021-02-15', 2, 102, 2, 2),
+(3, '2020-05-05', '2020-05-01', '2020-05-05', 3, 103, 3, 3),
+(4, '2019-07-10', '2019-07-01', '2019-07-10', 4, 101, 4, 4),
+(5, '2018-09-20', '2018-09-10', '2018-09-20', 5, 102, 5, 5),
+(6, '2017-10-15', '2017-10-01', '2017-10-15', 6, 103, 1, 1),
+(7, '2016-12-25', '2016-12-15', '2016-12-25', 7, 101, 2, 2);
+
+insert into procedimento (codigo_procedimento, nome_procedimento, descricao_procedimento) values
+(1, 'Cirurgia Cardíaca', 'Cirurgia para correção de problemas cardíacos'),
+(2, 'Exame de Sangue', 'Coleta e análise de amostras de sangue'),
+(3, 'Raio-X', 'Imagem radiográfica para diagnóstico'),
+(4, 'Endoscopia', 'Exame do trato gastrointestinal'),
+(5, 'Quimioterapia', 'Tratamento para câncer usando medicamentos');
+
+insert into procedimento_internacao (codigo_internacao, codigo_procedimento) values
+(1, 1),
+(1, 2),
+(2, 3),
+(2, 4),
+(3, 5),
+(4, 1),
+(5, 2),
+(6, 3),
+(7, 4);
+
+insert into enfermeiro (codigo_enfermeiro, nome_enfermeiro, rg_enfermeiro, cpf_enfermeiro, cre_enfermeiro, data_nasc_enfermeiro) values
+(1, 'Enf. João Costa', 'MG9876543', '33322211100', 'CRE12345/MG', '1985-01-01'),
+(2, 'Enf. Maria Lima', 'SP8765432', '44433322211', 'CRE23456/SP', '1990-02-02'),
+(3, 'Enf. Pedro Silva', 'RJ7654321', '55544433322', 'CRE34567/RJ', '1982-03-03'),
+(4, 'Enf. Ana Santos', 'PR6543210', '66655544433', 'CRE45678/PR', '1975-04-04'),
+(5, 'Enf. Carla Nunes', 'RS5432109', '77766655544', 'CRE56789/RS', '1983-05-05'),
+(6, 'Enf. Bruno Souza', 'SC4321098', '88877766655', 'CRE67890/SC', '1991-06-06'),
+(7, 'Enf. Paula Ribeiro', 'BA3210987', '99988877766', 'CRE78901/BA', '1974-07-07'),
+(8, 'Enf. Luiz Martins', 'DF2109876', '11199988877', 'CRE89012/DF', '1987-08-08'),
+(9, 'Enf. Fernanda Almeida', 'CE1098765', '22211199988', 'CRE90123/CE', '1976-09-09'),
+(10, 'Enf. Ricardo Gonçalves', 'GO0987654', '33322211199', 'CRE01234/GO', '1992-10-10');
 
 insert into enfermeiro_internacao (codigo_enfermeiro, codigo_internacao) values
 (1, 1),
@@ -445,18 +475,15 @@ insert into enfermeiro_internacao (codigo_enfermeiro, codigo_internacao) values
 (1, 6),
 (2, 6),
 (3, 7),
-(4, 7),
-(5, 8),
-(6, 8),
-(7, 9),
-(8, 9),
-(9, 10),
-(10, 10),
-(1, 11),
-(2, 11),
-(3, 12),
-(4, 12);
+(4, 7);
+
+insert into internacao (codigo_internacao, data_prevista_alta, data_entrada, data_alta, codigo_medico, numero_quarto, codigo_paciente, numero_carteira_convenio) values
+(13, '2022-01-10', '2022-01-01', '2022-01-12', 1, 101, 1, 1),
+(14, '2022-02-15', '2022-02-01', '2022-02-18', 2, 102, 2, 2),
+(15, '2022-03-20', '2022-03-01', '2022-03-25', 3, 103, 3, 3),
+(16, '2022-04-25', '2022-04-01', '2022-04-28', 4, 104, 4, 4);
 ```
+
 # A Ordem do Alterar. 
 Um banco de dados pode sofrer alterações ao longo da sua concepção e do seu desenvolvimento. Nesse momento devemos nos preparar para atualizar nossas estratégias. 
 Pensando no banco que já foi criado para o Projeto do Hospital, realize algumas alterações nas tabelas e nos dados usando comandos de atualização e exclusão:
@@ -476,3 +503,86 @@ where codigo_medico between 3 and 10;
 
 select * from medico;
 ```
+
+# As Relíquias dos Dados
+Uma vez que o banco estiver bem estruturado e desenhado, é possível realizar testes, simulando relatórios ou telas que o sistema possa necessitar. A tarefa consiste em criar consultas que levem aos resultados esperados.
+
+- 1. Todos os dados e o valor médio das consultas do ano de 2020 e das que foram feitas sob convênio.
+```sql
+select * from consulta where year(data_consulta) = 2020 and numero_carteira_convenio is not null;
+```
+
+- 2. Todos os dados das internações que tiveram data de alta maior que a data prevista para a alta.
+```sql
+select * from internacao where data_alta > data_prevista_alta;
+```
+
+- 3. Receituário completo da primeira consulta registrada com receituário associado.
+```sql
+select * 
+from receita as r
+inner join consulta as c
+on r.codigo_consulta = c.codigo_consulta
+order by data_consulta asc
+limit 1;
+```
+
+- 4. Todos os dados da consulta de maior valor e também da de menor valor (ambas as consultas não foram realizadas sob convênio).
+```sql
+select * from consulta where valor_consulta = (select max(valor_consulta) from consulta) or valor_consulta = (select min(valor_consulta) from consulta);
+```
+
+- 5. Todos os dados das internações em seus respectivos quartos, calculando o total da internação a partir do valor de diária do quarto e o número de dias entre a entrada e a alta.
+```sql
+select i.data_prevista_alta, i.data_entrada, i.data_alta, q.numero_quarto, tq.descricao_quarto, tq.diaria_quarto * datediff(i.data_alta, i.data_entrada) as total_internacao
+from internacao as i
+inner join quarto as q
+on i.numero_quarto = q.numero_quarto
+inner join tipo_quarto as tq
+on q.codigo_tipo_quarto = tq.codigo_tipo_quarto;
+```
+
+- 6. Data, procedimento e número de quarto de internações em quartos do tipo “apartamento”.
+```sql
+select i.data_entrada, p.descricao_procedimento, q.numero_quarto, tq.descricao_quarto
+from internacao as i
+inner join procedimento_internacao ip
+on ip.codigo_internacao = i.codigo_internacao
+inner join procedimento p
+on ip.codigo_procedimento = p.codigo_procedimento
+inner join quarto as q
+on i.numero_quarto = q.numero_quarto
+inner join tipo_quarto as tq
+on tq.codigo_tipo_quarto = q.codigo_tipo_quarto
+where tq.descricao_quarto = 'Apartamento';
+```
+
+- 7. Nome do paciente, data da consulta e especialidade de todas as consultas em que os pacientes eram menores de 18 anos na data da consulta e cuja especialidade não seja “pediatria”, ordenando por data de realização da consulta.
+ 
+- 8. Nome do paciente, nome do médico, data da internação e procedimentos das internações realizadas por médicos da especialidade “gastroenterologia”, que tenham acontecido em “enfermaria”.
+
+- 9. Os nomes dos médicos, seus CRMs e a quantidade de consultas que cada um realizou.
+```sql
+select nome_medico, crm_medico, count(codigo_consulta) as numero_consultas
+from medico as m
+inner join consulta as c on m.codigo_medico = c.codigo_medico group by nome_medico, crm_medico;
+```
+
+- 10. Todos os médicos que tenham "Gabriel" no nome.
+```sql
+select * from medico where nome_medico = 'Gabriel';
+```
+
+- 11. Os nomes, CREs e número de internações de enfermeiros que participaram de mais de uma internação.
+```sql
+select nome_enfermeiro, cre_enfermeiro, count(i.codigo_internacao) as internacoes
+from enfermeiro as e
+inner join enfermeiro_internacao as ei
+on e.codigo_enfermeiro = ei.codigo_enfermeiro
+inner join internacao as i 
+on i.codigo_internacao = ei.codigo_internacao
+group by nome_enfermeiro, cre_enfermeiro;
+```
+
+- 
+    
