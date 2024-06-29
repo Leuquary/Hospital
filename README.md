@@ -457,4 +457,22 @@ insert into enfermeiro_internacao (codigo_enfermeiro, codigo_internacao) values
 (3, 12),
 (4, 12);
 ```
+# A Ordem do Alterar. 
+Um banco de dados pode sofrer alterações ao longo da sua concepção e do seu desenvolvimento. Nesse momento devemos nos preparar para atualizar nossas estratégias. 
+Pensando no banco que já foi criado para o Projeto do Hospital, realize algumas alterações nas tabelas e nos dados usando comandos de atualização e exclusão:
+Crie um script que adicione uma coluna “em_atividade” para os médicos, indicando se ele ainda está atuando no hospital ou não. 
+Crie um script para atualizar ao menos dois médicos como inativos e os demais em atividade.
 
+```sql
+alter table medico add column em_atividade varchar(10);
+
+update medico
+set em_atividade = "inativo"
+where codigo_medico between 1 and 2;
+
+update medico
+set em_atividade = "ativo"
+where codigo_medico between 3 and 10;
+
+select * from medico;
+```
