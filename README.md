@@ -365,6 +365,7 @@ insert into receita (codigo_receita, nome_medicamento, qtd_medicamento, instruco
 (18, 'Alprazolam', 3, 'Tomar 1 comprimido ao dormir', 18),
 (19, 'Pantoprazol', 1, 'Tomar 1 comprimido ao dia', 19),
 (20, 'Fluconazol', 1, 'Tomar 1 comprimido ao dia por 7 dias', 20);
+
 insert into receita (codigo_receita, nome_medicamento, qtd_medicamento, instrucoes_medicamento, codigo_consulta) values
 (21, 'Paracetamol', 1, 'Tomar 1 comprimido a cada 8 horas', 1),
 (22, 'Ibuprofeno', 1, 'Tomar 1 comprimido a cada 6 horas', 2),
@@ -583,6 +584,4 @@ inner join internacao as i
 on i.codigo_internacao = ei.codigo_internacao
 group by nome_enfermeiro, cre_enfermeiro;
 ```
-
-- 
     
