@@ -391,7 +391,7 @@ insert into consulta (codigo_consulta, data_consulta, horario_consulta, valor_co
 (4, '2018-05-25', '11:00:00', 220.00, 'Cheque', 4, 4, 4, 4),
 (5, '2017-11-30', '16:00:00', 170.00, 'Dinheiro', 5, 5, 5, 5);
 ```
-- Registre ao menos sete internações. Pelo menos dois pacientes devem ter se internado mais de uma vez. Ao menos três quartos devem ser cadastrados. As internações devem ter ocorrido entre 01/01/2015 e 01/01/2022.
+- Registre ao menos sete internações. Pelo menos dois pacientes devem ter se internado mais de uma vez. Ao menos três quartos devem ser cadastrados. As internações devem ter ocorrido entre 01/01/2015 e 01/01/2022. Considerando que “a princípio o hospital trabalha com apartamentos, quartos duplos e enfermaria”, inclua ao menos esses três tipos com valores diferentes. Inclua dados de dez profissionais de enfermaria. Associe cada internação a ao menos dois enfermeiros.
 ```sql
 insert into quarto (numero_quarto, codigo_tipo_quarto) values
 (101, 1),
