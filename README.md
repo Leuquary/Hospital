@@ -87,8 +87,12 @@ create table medico (
 	cpf_medico varchar(15) unique not null,
 	rg_medico varchar(9) unique not null,
 	cargo_medico varchar(20) not null, 
-	data_nasc_medico date not null,
-	codigo_especialidade int
+	data_nasc_medico date not null
+);
+
+create table especialidade_medico(
+	codigo_medico int not null,
+    codigo_especialidade int not null
 );
 
 create table paciente (
@@ -99,7 +103,7 @@ create table paciente (
 	telefone_paciente varchar(11) not null,
 	email_paciente varchar(50) unique not null,
 	data_nasc_paciente date not null,
-	codigo_convenio int not null
+	numero_carteira_convenio int not null
 );
 
 create table convenio (
@@ -118,7 +122,7 @@ create table consulta(
 	codigo_paciente int not null,
 	codigo_medico int not null, 
 	codigo_especialidade int not null,
-    codigo_convenio int
+    numero_carteira_convenio int
 );
 
 create table especialidade(
@@ -130,6 +134,7 @@ create table receita(
 	codigo_receita int primary key,
     nome_medicamento varchar(100) not null,
     instrucoes_medicamento varchar(255) not null,
+    qtd_medicamento int not null,
     codigo_consulta int not null
 );
 
@@ -149,7 +154,9 @@ create table internacao(
     data_entrada date not null,
     data_alta date,
     codigo_medico int not null,
-    numero_quarto int not null
+    numero_quarto int not null,
+    codigo_paciente int not null,
+    numero_carteira_convenio int
 );
 
 create table quarto(
@@ -185,10 +192,7 @@ create table enfermeiro_internacao(
 );
 
 /*relacionando convenio e paciente*/
-alter table paciente add foreign key fk_codigo_convenio (codigo_convenio) references convenio(numero_carteira);
-
-/*relacionando especialidade e médico*/
-alter table medico add foreign key fk_codigo_especialidade (codigo_especialidade) references especialidade(codigo_especialidade);
+alter table paciente add foreign key fk_numero_carteira_convenio (numero_carteira_convenio) references convenio(numero_carteira);
 
 /*relacionando consulta e especialidade*/
 alter table consulta add foreign key fk_codigo_especialidade (codigo_especialidade) references especialidade(codigo_especialidade);
@@ -203,7 +207,7 @@ alter table consulta add foreign key fk_codigo_paciente (codigo_paciente) refere
 alter table receita add foreign key fk_codigo_consulta (codigo_consulta) references consulta(codigo_consulta);
 
 /*relacionando consulta e convenio*/
-alter table consulta add foreign key fk_codigo_convenio (numero_carteira) references convenio(numero_carteira);
+alter table consulta add foreign key fk_numero_carteira_convenio (numero_carteira_convenio) references convenio(numero_carteira);
 
 /*relacionando paciente e endereço*/
 alter table endereco add foreign key fk_codigo_paciente (codigo_paciente) references paciente(codigo_paciente);
@@ -211,7 +215,7 @@ alter table endereco add foreign key fk_codigo_paciente (codigo_paciente) refere
 /*relacionando quarto e internação*/
 alter table internacao add foreign key fk_numero_quarto (numero_quarto) references quarto(numero_quarto);
 
-/*relacionando internção e procedimento*/
+/*relacionando internação e procedimento*/
 alter table procedimento add foreign key fk_codigo_internacao (codigo_internacao) references internacao(codigo_internacao);
 
 /*relacionando internação e médico*/	
@@ -223,6 +227,16 @@ alter table enfermeiro_internacao add foreign key fk_codigo_internacao (codigo_i
 
 /*relacionando quarto e tipo*/
 alter table quarto add foreign key fk_tipo_quarto (codigo_tipo_quarto) references tipo_quarto(codigo_tipo_quarto);
+
+/*relacionando especialidade e médico*/
+alter table especialidade_medico add foreign key fk_codigo_medico (codigo_medico) references medico(codigo_medico);
+alter table especialidade_medico add foreign key fk_codigo_especialidade (codigo_especialidade) references especialidade(codigo_especialidade);
+
+/*relacionando internação e paciente*/
+alter table internacao add foreign key fk_codigo_paciente (codigo_paciente) references paciente(codigo_paciente);
+
+/*relacionando internação e convênio*/
+alter table internacao add foreign key fk_numero_carteira_convenio (numero_carteira_convenio) references convenio(numero_carteira);
 ```
 
 # O Prisioneiro dos Dados
@@ -265,7 +279,7 @@ insert into convenio (numero_carteira, nome_convenio, tempo_carencia, cnpj_conve
 (4, 'SulAmérica', '30 dias', '44455566000404'),
 (5, 'Golden Cross', '60 dias', '55566677000505');
 
-insert into paciente (codigo_paciente, nome_paciente, cpf_paciente, rg_paciente, telefone_paciente, email_paciente, data_nasc_paciente, codigo_convenio) values
+insert into paciente (codigo_paciente, nome_paciente, cpf_paciente, rg_paciente, telefone_paciente, email_paciente, data_nasc_paciente, numero_carteira_convenio) values
 (1, 'Alice Souza', '12345678901', 'MG1234567', '31987654321', 'alice@example.com', '1990-01-01', 1),
 (2, 'Bruno Lima', '23456789012', 'SP2345678', '11987654322', 'bruno@example.com', '1985-02-02', 2),
 (3, 'Carlos Pereira', '34567890123', 'RJ3456789', '21987654323', 'carlos@example.com', '1995-03-03', 3),
@@ -299,3 +313,148 @@ insert into endereco (codigo_endereco, rua, bairro, cep, numero, complemento, co
 (14, 'Rua N', 'Bairro N', '16123456', 114, 'Apto 14', 14),
 (15, 'Rua O', 'Bairro O', '17123456', 115, 'Apto 15', 15);
 ```
+- Registre 20 consultas de diferentes pacientes e diferentes médicos (alguns pacientes realizam mais que uma consulta). As consultas devem ter ocorrido entre 01/01/2015 e 01/01/2022. Ao menos dez consultas devem ter receituário com dois ou mais medicamentos.
+
+```sql
+insert into consulta (codigo_consulta, data_consulta, horario_consulta, valor_consulta, forma_pagamento, codigo_paciente, codigo_medico, codigo_especialidade, numero_carteira_convenio) values
+(1, '2015-01-15', '09:00:00', 150.00, 'Cartão', 1, 1, 1, 1),
+(2, '2015-02-20', '10:30:00', 200.00, 'Dinheiro', 2, 2, 2, 2),
+(3, '2016-03-25', '11:00:00', 175.00, 'Cartão', 3, 3, 3, 3),
+(4, '2016-04-10', '08:45:00', 180.00, 'Cartão', 4, 4, 4, 4),
+(5, '2017-05-05', '14:00:00', 160.00, 'Cartão', 5, 5, 5, 5),
+(6, '2017-06-15', '15:30:00', 190.00, 'Cartão', 6, 6, 6, 1),
+(7, '2018-07-20', '09:15:00', 170.00, 'Dinheiro', 7, 7, 7, 2),
+(8, '2018-08-25', '10:00:00', 165.00, 'Cartão', 8, 8, 8, 3),
+(9, '2019-09-30', '11:30:00', 185.00, 'Cartão', 9, 9, 9, 4),
+(10, '2019-10-15', '13:00:00', 175.00, 'Dinheiro', 10, 10, 10, 5),
+(11, '2020-01-10', '14:15:00', 200.00, 'Cartão', 11, 1, 1, 1),
+(12, '2020-02-15', '15:45:00', 150.00, 'Dinheiro', 12, 2, 2, 2),
+(13, '2020-03-20', '16:00:00', 170.00, 'Cartão', 13, 3, 3, 3),
+(14, '2020-04-25', '17:30:00', 180.00, 'Cartão', 14, 4, 4, 4),
+(15, '2021-05-30', '08:30:00', 160.00, 'Cartão', 15, 5, 5, 5),
+(16, '2021-06-05', '09:45:00', 190.00, 'Cartão', 1, 6, 6, 1),
+(17, '2021-07-10', '10:00:00', 165.00, 'Dinheiro', 2, 7, 7, 2),
+(18, '2021-08-15', '11:15:00', 175.00, 'Cartão', 3, 8, 8, 3),
+(19, '2021-09-20', '12:00:00', 185.00, 'Cartão', 4, 9, 9, 4),
+(20, '2022-01-01', '13:45:00', 150.00, 'Dinheiro', 5, 10, 10, 5);
+
+insert into receita (codigo_receita, nome_medicamento, qtd_medicamento, instrucoes_medicamento, codigo_consulta) values
+(1, 'Paracetamol', 1, 'Tomar 1 comprimido a cada 8 horas', 1),
+(2, 'Ibuprofeno', 2, 'Tomar 1 comprimido a cada 6 horas', 2),
+(3, 'Amoxicilina', 4, 'Tomar 1 cápsula a cada 12 horas por 7 dias', 3),
+(4, 'Losartana', 3, 'Tomar 1 comprimido ao dia', 4),
+(5, 'Omeprazol', 1, 'Tomar 1 cápsula ao dia', 5),
+(6, 'Metformina', 2, 'Tomar 1 comprimido 2 vezes ao dia', 6),
+(7, 'Lorazepam', 1, 'Tomar 1 comprimido ao dormir', 7),
+(8, 'Diclofenaco', 5, 'Tomar 1 comprimido a cada 8 horas', 8),
+(9, 'Cetoconazol', 6, 'Aplicar o creme na área afetada 2 vezes ao dia', 9),
+(10, 'Azitromicina', 2, 'Tomar 1 comprimido ao dia por 3 dias', 10),
+(11, 'Atenolol', 2, 'Tomar 1 comprimido ao dia', 11),
+(12, 'Prednisona', 1, 'Tomar 1 comprimido ao dia', 12),
+(13, 'Aspirina', 8, 'Tomar 1 comprimido a cada 12 horas', 13),
+(14, 'Clonazepam', 4, 'Tomar 1 comprimido ao dormir', 14),
+(15, 'Sinvastatina', 4, 'Tomar 1 comprimido ao dia', 15),
+(16, 'Nimesulida', 3, 'Tomar 1 comprimido a cada 8 horas', 16),
+(17, 'Levotiroxina', 6, 'Tomar 1 comprimido ao dia', 17),
+(18, 'Alprazolam', 3, 'Tomar 1 comprimido ao dormir', 18),
+(19, 'Pantoprazol', 1, 'Tomar 1 comprimido ao dia', 19),
+(20, 'Fluconazol', 1, 'Tomar 1 comprimido ao dia por 7 dias', 20);
+
+insert into receita (codigo_receita, nome_medicamento, qtd_medicamento, instrucoes_medicamento, codigo_consulta) values
+(21, 'Paracetamol', 1, 'Tomar 1 comprimido a cada 8 horas', 1),
+(22, 'Ibuprofeno', 1, 'Tomar 1 comprimido a cada 6 horas', 2),
+(23, 'Amoxicilina', 2, 'Tomar 1 cápsula a cada 12 horas por 7 dias', 3),
+(24, 'Losartana', 4, 'Tomar 1 comprimido ao dia', 4),
+(25, 'Omeprazol', 4, 'Tomar 1 cápsula ao dia', 5),
+(26, 'Metformina', 3, 'Tomar 1 comprimido 2 vezes ao dia', 6),
+(27, 'Lorazepam', 2, 'Tomar 1 comprimido ao dormir', 7),
+(28, 'Diclofenaco', 9, 'Tomar 1 comprimido a cada 8 horas', 8),
+(29, 'Cetoconazol', 8, 'Aplicar o creme na área afetada 2 vezes ao dia', 9),
+(30, 'Azitromicina', 6, 'Tomar 1 comprimido ao dia por 3 dias', 10),
+(31, 'Atenolol', 1, 'Tomar 1 comprimido ao dia', 11),
+(32, 'Prednisona', 2, 'Tomar 1 comprimido ao dia', 12),
+(33, 'Aspirina', 5, 'Tomar 1 comprimido a cada 12 horas', 13),
+(34, 'Clonazepam', 5, 'Tomar 1 comprimido ao dormir', 14),
+(35, 'Sinvastatina', 2, 'Tomar 1 comprimido ao dia', 15),
+(36, 'Nimesulida', 2, 'Tomar 1 comprimido a cada 8 horas', 16),
+(37, 'Levotiroxina', 1, 'Tomar 1 comprimido ao dia', 17),
+(38, 'Alprazolam', 7, 'Tomar 1 comprimido ao dormir', 18),
+(39, 'Pantoprazol', 7, 'Tomar 1 comprimido ao dia', 19),
+(40, 'Fluconazol', 1,  'Tomar 1 comprimido ao dia por 7 dias', 20);
+```
+- Associe ao menos cinco pacientes a cinco consultas
+```sql
+insert into consulta (codigo_consulta, data_consulta, horario_consulta, valor_consulta, forma_pagamento, codigo_paciente, codigo_medico, codigo_especialidade, codigo_convenio) values
+(1, '2020-01-15', '10:00:00', 200.00, 'Cartão de Crédito', 1, 1, 1, 1),
+(2, '2019-03-20', '14:00:00', 150.00, 'Dinheiro', 2, 2, 2, 2),
+(3, '2021-07-10', '09:30:00', 180.00, 'Cartão de Débito', 3, 3, 3, 3),
+(4, '2018-05-25', '11:00:00', 220.00, 'Cheque', 4, 4, 4, 4),
+(5, '2017-11-30', '16:00:00', 170.00, 'Dinheiro', 5, 5, 5, 5);
+```
+- Registre ao menos sete internações. Pelo menos dois pacientes devem ter se internado mais de uma vez. Ao menos três quartos devem ser cadastrados. As internações devem ter ocorrido entre 01/01/2015 e 01/01/2022.
+```sql
+insert into quarto (numero_quarto, codigo_tipo_quarto) values
+(101, 1),
+(102, 2),
+(103, 3),
+(104, 1),
+(105, 2);
+
+insert into tipo_quarto (codigo_tipo_quarto, diaria_quarto, descricao_quarto) values
+(1, 150.00, 'Apartamento'),
+(2, 250.00, 'Enfermaria'),
+(3, 350.00, 'Quarto duplo');
+
+insert into enfermeiro (codigo_enfermeiro, nome_enfermeito, rg_enfermeiro, cpf_enfermeiro, cre_enfermeiro, data_nasc_enfermeiro) values
+(1, 'Enf. Joana Martins', 'SP9876543', '123.456.789-01', 'CRE123456', '1985-03-10'),
+(2, 'Enf. Carlos Eduardo', 'RJ8765432', '234.567.890-12', 'CRE234567', '1980-07-22'),
+(3, 'Enf. Ana Paula Silva', 'MG7654321', '345.678.901-23', 'CRE345678', '1990-02-15'),
+(4, 'Enf. Maria Clara Oliveira', 'BA6543210', '456.789.012-34', 'CRE456789', '1987-05-05'),
+(5, 'Enf. José Antônio Sousa', 'RS5432109', '567.890.123-45', 'CRE567890', '1983-09-25'),
+(6, 'Enf. Paula Mendes', 'SC4321098', '678.901.234-56', 'CRE678901', '1981-11-30'),
+(7, 'Enf. Thiago Ribeiro', 'PR3210987', '789.012.345-67', 'CRE789012', '1984-04-14'),
+(8, 'Enf. Laura Carvalho', 'PE2109876', '890.123.456-78', 'CRE890123', '1989-01-25'),
+(9, 'Enf. Marcos Silva', 'GO1098765', '901.234.567-89', 'CRE901234', '1978-08-12'),
+(10, 'Enf. Fernanda Gomes', 'DF0123456', '012.345.678-90', 'CRE012345', '1992-06-18');
+
+insert into internacao (codigo_internacao, data_prevista_alta, data_entrada, data_alta, codigo_medico, numero_quarto, codigo_paciente, numero_carteira_convenio) values
+(1, '2015-01-20', '2015-01-10', '2015-01-19', 1, 101, 1, 1),
+(2, '2016-02-25', '2016-02-15', '2016-02-24', 2, 102, 2, 2),
+(3, '2017-03-30', '2017-03-20', '2017-03-29', 3, 103, 3, 3),
+(4, '2018-04-20', '2018-04-10', '2018-04-19', 4, 101, 4, 4),
+(5, '2019-05-25', '2019-05-15', '2019-05-24', 5, 102, 5, 5),
+(6, '2020-06-30', '2020-06-20', '2020-06-29', 6, 103, 6, 1),
+(7, '2021-07-20', '2021-07-10', '2021-07-19', 7, 101, 7, 2),
+(8, '2021-08-25', '2021-08-15', '2021-08-24', 8, 102, 8, 3),
+(9, '2021-09-30', '2021-09-20', '2021-09-29', 9, 103, 9, 4),
+(10, '2022-01-15', '2022-01-05', '2022-01-14', 10, 101, 10, 5),
+(11, '2016-10-15', '2016-10-05', '2016-10-14', 1, 102, 1, 1),
+(12, '2018-12-20', '2018-12-10', '2018-12-19', 2, 103, 2, 2);
+
+insert into enfermeiro_internacao (codigo_enfermeiro, codigo_internacao) values
+(1, 1),
+(2, 1),
+(3, 2),
+(4, 2),
+(5, 3),
+(6, 3),
+(7, 4),
+(8, 4),
+(9, 5),
+(10, 5),
+(1, 6),
+(2, 6),
+(3, 7),
+(4, 7),
+(5, 8),
+(6, 8),
+(7, 9),
+(8, 9),
+(9, 10),
+(10, 10),
+(1, 11),
+(2, 11),
+(3, 12),
+(4, 12);
+```
+
