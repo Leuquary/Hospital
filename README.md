@@ -86,14 +86,15 @@ create table medico (
 	nome_medico varchar(50) not null,
 	cpf_medico varchar(15) unique not null,
 	rg_medico varchar(9) unique not null,
-	cargo_medico varchar(20) not null, 
-    crm_medico varchar(20) not null,
+	cargo_medico varchar(20) not null,
+	salario_medico decimal(5,2) not null,
+    	crm_medico varchar(20) not null,
 	data_nasc_medico date not null
 );
 
 create table especialidade_medico(
 	codigo_medico int not null,
-    codigo_especialidade int not null
+    	codigo_especialidade int not null
 );
 
 create table paciente (
@@ -123,7 +124,7 @@ create table consulta(
 	codigo_paciente int not null,
 	codigo_medico int not null, 
 	codigo_especialidade int not null,
-    numero_carteira_convenio int
+    	numero_carteira_convenio int
 );
 
 create table especialidade(
@@ -132,7 +133,7 @@ create table especialidade(
 );
 
 create table receita(
-	codigo_receita int primary key,
+    codigo_receita int primary key,
     nome_medicamento varchar(100) not null,
     instrucoes_medicamento varchar(255) not null,
     qtd_medicamento int not null,
@@ -140,7 +141,7 @@ create table receita(
 );
 
 create table endereco(
-	codigo_endereco int primary key,
+    codigo_endereco int primary key,
     rua varchar(100) not null,
     bairro varchar(100) not null,
     cep varchar(9) not null,
@@ -150,7 +151,7 @@ create table endereco(
 );
 
 create table internacao(
-	codigo_internacao int primary key,
+    codigo_internacao int primary key,
     data_prevista_alta date not null,
     data_entrada date not null,
     data_alta date,
@@ -161,51 +162,48 @@ create table internacao(
 );
 
 create table quarto(
-	numero_quarto int primary key,
+    numero_quarto int primary key,
     codigo_tipo_quarto int not null
 );
 
 create table procedimento(
-	codigo_procedimento int primary key,
+    codigo_procedimento int primary key,
     nome_procedimento varchar(50) not null,
     descricao_procedimento varchar(100) not null
 );
 
 create table procedimento_internacao(
-	codigo_internacao int not null,
+    codigo_internacao int not null,
     codigo_procedimento int not null
 );
 
 create table enfermeiro(
-	codigo_enfermeiro int primary key,
+    codigo_enfermeiro int primary key,
     nome_enfermeiro varchar(50) not null,
     rg_enfermeiro varchar(9) unique not null,
     cpf_enfermeiro varchar(15) unique not null,
-	cre_enfermeiro varchar(20) unique not null,
+    cre_enfermeiro varchar(20) unique not null,
     data_nasc_enfermeiro date not null
 );
 
 create table tipo_quarto(
-	codigo_tipo_quarto int primary key,
+    codigo_tipo_quarto int primary key,
     diaria_quarto decimal(5,2) not null,
     descricao_quarto varchar(200) not null
 );
 
 create table enfermeiro_internacao(
-	codigo_enfermeiro int not null,
+    codigo_enfermeiro int not null,
     codigo_internacao int not null
 );
-
-/*relacionando convenio e paciente*/
-alter table paciente add foreign key fk_numero_carteira_convenio (numero_carteira_convenio) references convenio(numero_carteira);
 
 /*relacionando consulta e especialidade*/
 alter table consulta add foreign key fk_codigo_especialidade (codigo_especialidade) references especialidade(codigo_especialidade);
 
-/*relacionando médico e consulta*/
+/*relacionando consulta e médico*/
 alter table consulta add foreign key fk_codigo_medico (codigo_medico) references medico(codigo_medico);
 
-/*relacionando paciente e consulta*/
+/*relacionando consulta paciente*/
 alter table consulta add foreign key fk_codigo_paciente (codigo_paciente) references paciente(codigo_paciente);
 
 /*relacionando consulta e receita*/
@@ -214,10 +212,17 @@ alter table receita add foreign key fk_codigo_consulta (codigo_consulta) referen
 /*relacionando consulta e convenio*/
 alter table consulta add foreign key fk_numero_carteira_convenio (numero_carteira_convenio) references convenio(numero_carteira);
 
+/*relacionando paciente e convênio*/
+alter table paciente add foreign key fk_numero_carteira_convenio (numero_carteira_convenio) references convenio(numero_carteira);
+
 /*relacionando paciente e endereço*/
 alter table endereco add foreign key fk_codigo_paciente (codigo_paciente) references paciente(codigo_paciente);
 
-/*relacionando quarto e internação*/
+/*relacionando especialidade e médico*/
+alter table especialidade_medico add foreign key fk_codigo_medico (codigo_medico) references medico(codigo_medico);
+alter table especialidade_medico add foreign key fk_codigo_especialidade (codigo_especialidade) references especialidade(codigo_especialidade);
+
+/*relacionando internação e quarto*/
 alter table internacao add foreign key fk_numero_quarto (numero_quarto) references quarto(numero_quarto);
 
 /*relacionando internação e procedimento*/
@@ -227,22 +232,18 @@ alter table procedimento_internacao add foreign key fk_codigo_procedimento (codi
 /*relacionando internação e médico*/	
 alter table internacao add foreign key fk_codigo_medico (codigo_medico) references medico(codigo_medico);
 
-/*relacionando enfermeiro e internação*/
+/*relacionando internação e enfermeiro*/
 alter table enfermeiro_internacao add foreign key fk_codigo_enfermeiro (codigo_enfermeiro) references enfermeiro(codigo_enfermeiro);
 alter table enfermeiro_internacao add foreign key fk_codigo_internacao (codigo_internacao) references internacao(codigo_internacao);
-
-/*relacionando quarto e tipo*/
-alter table quarto add foreign key fk_tipo_quarto (codigo_tipo_quarto) references tipo_quarto(codigo_tipo_quarto);
-
-/*relacionando especialidade e médico*/
-alter table especialidade_medico add foreign key fk_codigo_medico (codigo_medico) references medico(codigo_medico);
-alter table especialidade_medico add foreign key fk_codigo_especialidade (codigo_especialidade) references especialidade(codigo_especialidade);
 
 /*relacionando internação e paciente*/
 alter table internacao add foreign key fk_codigo_paciente (codigo_paciente) references paciente(codigo_paciente);
 
 /*relacionando internação e convênio*/
 alter table internacao add foreign key fk_numero_carteira_convenio (numero_carteira_convenio) references convenio(numero_carteira);
+
+/*relacionando quarto e tipo*/
+alter table quarto add foreign key fk_tipo_quarto (codigo_tipo_quarto) references tipo_quarto(codigo_tipo_quarto);
 ```
 
 # O Prisioneiro dos Dados
@@ -274,6 +275,28 @@ insert medico (codigo_medico, nome_medico, cpf_medico, rg_medico, crm_medico, ca
 (8, 'Dra. Helena Castro', '890.123.456-77', 'DF8901234', 'CRM89012/DF', 'Oftalmologista', '1988-05-14', 8),
 (9, 'Dr. Ricardo Santos', '901.234.567-88', 'CE9012345', 'CRM90123/CE', 'Gastroenterologista', '1976-10-05', 9),
 (10, 'Dra. Carolina Fernandes', '012.345.678-99', 'GO0123456', 'CRM01234/GO', 'Oncologista', '1981-08-19', 10);
+
+insert into especialidade_medico (codigo_medico, codigo_especialidade) values
+(1, 1), 
+(2, 2), 
+(3, 3), 
+(4, 4), 
+(5, 5), 
+(6, 6), 
+(7, 7), 
+(8, 8), 
+(9, 9), 
+(10, 10), 
+(1, 3), 
+(2, 4), 
+(3, 5), 
+(4, 6), 
+(5, 7), 
+(6, 8), 
+(7, 9), 
+(8, 10), 
+(9, 1), 
+(10, 2); 
 ```
 
 - Inclua ao menos 15 pacientes.
@@ -286,21 +309,21 @@ insert into convenio (numero_carteira, nome_convenio, tempo_carencia, cnpj_conve
 (5, 'Golden Cross', '60 dias', '55566677000505');
 
 insert into paciente (codigo_paciente, nome_paciente, cpf_paciente, rg_paciente, telefone_paciente, email_paciente, data_nasc_paciente, numero_carteira_convenio) values
-(1, 'Alice Souza', '12345678901', 'MG1234567', '31987654321', 'alice@example.com', '1990-01-01', 1),
-(2, 'Bruno Lima', '23456789012', 'SP2345678', '11987654322', 'bruno@example.com', '1985-02-02', 2),
-(3, 'Carlos Pereira', '34567890123', 'RJ3456789', '21987654323', 'carlos@example.com', '1995-03-03', 3),
-(4, 'Daniela Santos', '45678901234', 'PR4567890', '41987654324', 'daniela@example.com', '1980-04-04', 4),
-(5, 'Eduardo Silva', '56789012345', 'RS5678901', '51987654325', 'eduardo@example.com', '1975-05-05', 5),
-(6, 'Fernanda Oliveira', '67890123456', 'SC6789012', '61987654326', 'fernanda@example.com', '1988-06-06', 1),
-(7, 'Gabriel Costa', '78901234567', 'BA7890123', '71987654327', 'gabriel@example.com', '1979-07-07', 2),
-(8, 'Helena Martins', '89012345678', 'DF8901234', '81987654328', 'helena@example.com', '1992-08-08', 3),
-(9, 'Igor Almeida', '90123456789', 'CE9012345', '91987654329', 'igor@example.com', '1983-09-09', 4),
-(10, 'Julia Fernandes', '01234567890', 'GO0123456', '61987654330', 'julia@example.com', '1991-10-10', 5),
-(11, 'Lucas Rocha', '12345098765', 'MA1234509', '71987654331', 'lucas@example.com', '1987-11-11', 1),
-(12, 'Mariana Ribeiro', '23456109876', 'PA2345610', '81987654332', 'mariana@example.com', '1982-12-12', 2),
-(13, 'Nicolas Lima', '34567210987', 'PE3456721', '91987654333', 'nicolas@example.com', '1993-01-13', 3),
-(14, 'Olivia Silva', '45678321098', 'PI4567832', '61987654334', 'olivia@example.com', '1994-02-14', 4),
-(15, 'Pedro Nunes', '56789432109', 'RJ5678943', '31987654335', 'pedro@example.com', '1990-03-15', 5);
+(1, 'Alice Souza', '12345678901', 'MG1234567', '31987654321', 'alice@gmail.com', '1990-01-19', 1),
+(2, 'Bruno Lima', '23456789012', 'SP2345678', '11987654322', 'bruno@gmail.com', '1985-02-26', 2),
+(3, 'Carlos Pereira', '34567890123', 'RJ3456789', '21987654323', 'carlos@gmail.com', '1995-03-30', 3),
+(4, 'Daniela Santos', '45678901234', 'PR4567890', '41987654324', 'daniela@hotmail.com', '1980-04-15', 4),
+(5, 'Eduardo Silva', '56789012345', 'RS5678901', '51987654325', 'eduardo@hotmail.com', '1975-12-05', 5),
+(6, 'Fernanda Oliveira', '67890123456', 'SC6789012', '61987654326', 'fernanda@gmail.com', '1988-08-06', 1),
+(7, 'Gabriel Costa', '78901234567', 'BA7890123', '71987654327', 'gabriel@gmail.com', '1979-05-07', 2),
+(8, 'Helena Martins', '89012345678', 'DF8901234', '81987654328', 'helena@gmail.com', '1992-10-08', 3),
+(9, 'Igor Almeida', '90123456789', 'CE9012345', '91987654329', 'igor@hotmail.com', '1983-09-04', 4),
+(10, 'Julia Fernandes', '01234567890', 'GO0123456', '61987654330', 'julia@hotmail.com', '1991-10-17', 5),
+(11, 'Lucas Rocha', '12345098765', 'MA1234509', '71987654331', 'lucas@gmail.com', '1987-12-11', 1),
+(12, 'Mariana Ribeiro', '23456109876', 'PA2345610', '81987654332', 'mariana@hotmail.com', '1982-12-12', 2),
+(13, 'Nicolas Lima', '34567210987', 'PE3456721', '91987654333', 'nicolas@gmail.com', '1993-01-13', 3),
+(14, 'Olivia Silva', '45678321098', 'PI4567832', '61987654334', 'olivia@gmail.com', '1994-02-14', 4),
+(15, 'Pedro Nunes', '56789432109', 'RJ5678943', '31987654335', 'pedro@hotmail.com', '1990-03-15', 5);
 
 insert into endereco (codigo_endereco, rua, bairro, cep, numero, complemento, codigo_paciente) values
 (1, 'Rua A', 'Bairro A', '30123456', 101, 'Apto 1', 1),
@@ -559,8 +582,39 @@ where tq.descricao_quarto = 'Apartamento';
 ```
 
 - 7. Nome do paciente, data da consulta e especialidade de todas as consultas em que os pacientes eram menores de 18 anos na data da consulta e cuja especialidade não seja “pediatria”, ordenando por data de realização da consulta.
+```sql
+select p.nome_paciente, c.data_consulta, e.descricao_especialidade
+from paciente p
+inner join consulta c
+on p.codigo_paciente = c.codigo_paciente
+inner join especialidade e 
+on c.codigo_especialidade = e.codigo_especialidade
+where (cast((select datediff(c.data_consulta, p.data_nasc_paciente)/365) as unsigned)) < 18 and e.descricao_especialidade != "Pediatra"
+order by c.data_consulta;
+```
  
 - 8. Nome do paciente, nome do médico, data da internação e procedimentos das internações realizadas por médicos da especialidade “gastroenterologia”, que tenham acontecido em “enfermaria”.
+```sql
+select i.codigo_internacao, p.nome_paciente, m.nome_medico, i.data_entrada, po.descricao_procedimento
+from paciente p
+inner join internacao i
+on p.codigo_paciente = i.codigo_paciente 
+inner join medico m 
+on m.codigo_medico = i.codigo_medico
+inner join especialidade_medico me
+on me.codigo_medico = m.codigo_medico
+inner join especialidade e
+on me.codigo_especialidade = e.codigo_especialidade
+inner join procedimento_internacao pi
+on pi.codigo_internacao = i.codigo_internacao
+inner join procedimento po
+on po.codigo_procedimento = pi.codigo_procedimento
+inner join quarto q
+on i.numero_quarto = q.numero_quarto
+inner join tipo_quarto tq
+on tq.codigo_tipo_quarto = q.codigo_tipo_quarto
+where e.descricao_especialidade = 'Gastroenterologia' and tq.descricao_quarto = 'Enfermaria';
+```
 
 - 9. Os nomes dos médicos, seus CRMs e a quantidade de consultas que cada um realizou.
 ```sql
