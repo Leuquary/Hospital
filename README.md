@@ -82,54 +82,54 @@ create database hospital;
 use hospital;
 
 create table medico (
-	codigo_medico int primary key,
-	nome_medico varchar(50) not null,
-	cpf_medico varchar(15) unique not null,
-	rg_medico varchar(9) unique not null,
-	cargo_medico varchar(20) not null,
-	salario_medico decimal(5,2) not null,
-    	crm_medico varchar(20) not null,
-	data_nasc_medico date not null
+     codigo_medico int primary key,
+     nome_medico varchar(50) not null,
+     cpf_medico varchar(15) unique not null,
+     rg_medico varchar(9) unique not null,
+     cargo_medico varchar(20) not null,
+     salario_medico decimal(5,2) not null,
+     crm_medico varchar(20) not null,
+     data_nasc_medico date not null
 );
 
 create table especialidade_medico(
-	codigo_medico int not null,
-    	codigo_especialidade int not null
+     codigo_medico int not null,
+     codigo_especialidade int not null
 );
 
 create table paciente (
-	codigo_paciente int primary key,
-	nome_paciente varchar(50) not null,
-	cpf_paciente varchar(11) unique not null, 
-	rg_paciente varchar(9) unique not null, 
-	telefone_paciente varchar(11) not null,
-	email_paciente varchar(50) unique not null,
-	data_nasc_paciente date not null,
-	numero_carteira_convenio int not null
+     codigo_paciente int primary key,
+     nome_paciente varchar(50) not null,
+     cpf_paciente varchar(11) unique not null, 
+     rg_paciente varchar(9) unique not null, 
+     telefone_paciente varchar(11) not null,
+     email_paciente varchar(50) unique not null,
+     data_nasc_paciente date not null,
+     numero_carteira_convenio int not null
 );
 
 create table convenio (
-	numero_carteira int primary key, 
-	nome_convenio varchar(50) not null,
-	tempo_carencia varchar(10) not null,
-	cnpj_convenio varchar(14) unique not null
+     numero_carteira int primary key, 
+     nome_convenio varchar(50) not null,
+     tempo_carencia varchar(10) not null,
+     cnpj_convenio varchar(14) unique not null
 );
 
 create table consulta(
-	codigo_consulta int primary key,
-	data_consulta date not null,
-	horario_consulta time not null,
-	valor_consulta decimal(5,2) not null,
-	forma_pagamento varchar(20) not null,
-	codigo_paciente int not null,
-	codigo_medico int not null, 
-	codigo_especialidade int not null,
-    	numero_carteira_convenio int
+     codigo_consulta int primary key,
+     data_consulta date not null,
+     horario_consulta time not null,
+     valor_consulta decimal(5,2) not null,
+     forma_pagamento varchar(20) not null,
+     codigo_paciente int not null,
+     codigo_medico int not null, 
+     codigo_especialidade int not null,
+     numero_carteira_convenio int
 );
 
 create table especialidade(
-	codigo_especialidade int primary key,
-	descricao_especialidade varchar(50) not null
+    codigo_especialidade int primary key,
+    descricao_especialidade varchar(50) not null
 );
 
 create table receita(
